@@ -1,27 +1,41 @@
-import { supabase } from "./lib/supabase/client";
 import { LoginButton } from "@/components/login-button";
+import { LogoutButton } from "@/components/logout-button";
+import { createSupabaseServerClient } from "@/app/lib/supabase/server";
 
 export default async function Home() {
-  const { data, error } = await supabase
-    .from("monsters")
-    .select("*");
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  console.log("Data:", data);
-  console.log("Error:", error);
+  const { data } = user
+    ? await supabase.from("monsters").select("*")
+    : { data: null };
 
   return (
-    <main>
-      <LoginButton />
-      <h1>
-        Cartas
-      </h1>
+    <main className="p-6 space-y-4">
+      {user ? <LogoutButton /> : <LoginButton />}
 
-      {data?.map((card) => (
-        <div key={card.id}>
-          <h3>{card.name}</h3>
-        </div>
-      ))}
+      {user ? (
+        <section>
+          <p>Sesión activa</p>
+          <p>Email: {user.email}</p>
+        </section>
+      ) : (
+        <p>No hay sesión activa</p>
+      )}
 
+      {user && data?.length ? (
+        data.map((card) => (
+          <div key={card.id}>
+            <h3>{card.name}</h3>
+          </div>
+        ))
+      ) : user ? (
+        <p>No hay cartas disponibles.</p>
+      ) : null}
+
+      
     </main>
   );
 }
