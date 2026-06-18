@@ -3,6 +3,7 @@
 import type { CollectionMonster } from "@/app/lib/collection";
 import type { Monster } from "@/app/lib/database.types";
 import { useMemo, useState } from "react";
+import { MonsterCard } from "./monster-card";
 
 type SortKey = "rarity" | "level" | "power";
 type SortDirection = "asc" | "desc";
@@ -204,50 +205,23 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
           </p>
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {visibleCollection.map((item) => (
-            <article
-              className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm"
+            <MonsterCard
               key={item.id}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p
-                    className={`inline-flex rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] ${
-                      rarityStyles[item.monster.rarity]
-                    }`}
-                  >
-                    {item.monster.rarity}
-                  </p>
-                  <h2 className="mt-3 text-xl font-black">{item.monster.name}</h2>
-                  <p className="mt-1 text-sm capitalize text-zinc-400">
-                    {item.monster.monster_type} - Poder {item.monster.base_power}
-                  </p>
-                </div>
-                <div className="rounded-lg bg-zinc-950 px-3 py-2 text-center text-zinc-50">
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-orange-400">
-                    Nivel
-                  </p>
-                  <p className="text-2xl font-black">{item.level}</p>
-                </div>
-              </div>
-
-              <div className="mt-5 space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-bold text-zinc-300">Copias</span>
-                  <span className="text-zinc-400">{item.quantity}</span>
-                </div>
-                <div className="h-3 overflow-hidden rounded-full bg-zinc-800">
-                  <div
-                    className="h-full rounded-full bg-orange-500"
-                    style={{ width: `${item.progressPercent}%` }}
-                  />
-                </div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  {item.progressLabel}
-                </p>
-              </div>
-            </article>
+              monster={{
+                id: item.monster.id,
+                name: item.monster.name,
+                rarity: item.monster.rarity,
+                monster_type: item.monster.monster_type,
+                base_power: item.monster.base_power,
+                image_path: item.monster.image_path,
+                level: item.level,
+                quantity: item.quantity,
+                showCopiesBar: true,
+                statusBadge: item.nextLevel ? `${item.quantity} / ${item.nextLevelRequiredCopies}` : "Nivel maximo",
+              }}
+            />
           ))}
         </div>
       )}

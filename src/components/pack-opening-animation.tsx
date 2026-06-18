@@ -2,46 +2,12 @@
 
 import type { OpenPackResult } from "@/app/lib/database.types";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { MonsterCard } from "./monster-card";
+import type { CardMonsterData } from "./monster-card";
 
 type PackOpeningAnimationProps = {
   result: OpenPackResult;
   onClose: () => void;
-};
-
-const rarityCardStyles: Record<
-  string,
-  { border: string; bg: string; text: string; gradient: string }
-> = {
-  common: {
-    border: "border-zinc-600",
-    bg: "bg-zinc-900",
-    text: "text-zinc-300",
-    gradient: "from-zinc-800 via-zinc-900 to-zinc-950",
-  },
-  rare: {
-    border: "border-sky-600",
-    bg: "bg-sky-950",
-    text: "text-sky-300",
-    gradient: "from-sky-800 via-sky-950 to-slate-950",
-  },
-  epic: {
-    border: "border-violet-600",
-    bg: "bg-violet-950",
-    text: "text-violet-300",
-    gradient: "from-violet-800 via-violet-950 to-zinc-950",
-  },
-  legendary: {
-    border: "border-amber-500",
-    bg: "bg-amber-950",
-    text: "text-amber-300",
-    gradient: "from-amber-700 via-amber-950 to-zinc-950",
-  },
-  mythic: {
-    border: "border-rose-500",
-    bg: "bg-rose-950",
-    text: "text-rose-300",
-    gradient: "from-rose-700 via-rose-950 to-zinc-950",
-  },
 };
 
 export function PackOpeningAnimation({ result, onClose }: PackOpeningAnimationProps) {
@@ -100,10 +66,6 @@ export function PackOpeningAnimation({ result, onClose }: PackOpeningAnimationPr
   }, [currentCardIndex]);
 
   const monster = result.monsters[currentCardIndex];
-  const styles = monster ? rarityCardStyles[monster.rarity] ?? rarityCardStyles.common : rarityCardStyles.common;
-  const isNew = monster?.quantity_before === 0;
-  const isDuplicate = monster && monster.quantity_before > 0 && !monster.converted_to_gold;
-  const converted = monster?.converted_to_gold;
   const total = result.monsters.length;
 
   return (
@@ -211,80 +173,26 @@ export function PackOpeningAnimation({ result, onClose }: PackOpeningAnimationPr
               )}
 
               {/* Cara frontal (revelada inmediatamente al navegar) */}
-              {cardState === "revealed" && (
-                <div className="aspect-[3/4] w-full animate-card-reveal rounded-xl border-2 shadow-xl"
-                  style={{
-                    borderColor: styles.border.replace("border-", ""),
-                  }}
-                >
-                  <div className={`h-full w-full rounded-xl bg-gradient-to-br ${styles.gradient} p-5`}>
-                    <div className="flex h-full flex-col justify-between">
-                      {/* Rareza badge + nivel */}
-                      <div className="flex items-start justify-between">
-                        <span
-                          className={`inline-flex rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] ${styles.border} ${styles.bg} ${styles.text}`}
-                        >
-                          {monster.rarity}
-                        </span>
-                        <span className="rounded-lg bg-black/40 px-3 py-1.5 text-center">
-                          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-500">
-                            Nvl
-                          </p>
-                          <p className="text-xl font-black text-zinc-50">
-                            {monster.level_after}
-                          </p>
-                        </span>
-                      </div>
-
-                      {/* Espacio central */}
-                      <div className="text-center">
-                        <h3 className="text-2xl font-black text-zinc-50">
-                          {monster.name}
-                        </h3>
-                        <p className="mt-1 text-sm capitalize text-zinc-400">
-                          {monster.monster_type} · Poder {monster.base_power}
-                        </p>
-                      </div>
-
-                      {/* Tags + barra copias */}
-                      <div className="space-y-3">
-                        <div className="flex flex-wrap justify-center gap-2">
-                          {isNew && (
-                            <span className="rounded-full bg-green-900/60 px-3 py-1 text-xs font-bold uppercase tracking-[0.1em] text-green-400">
-                              ✦ Nuevo
-                            </span>
-                          )}
-                          {isDuplicate && (
-                            <span className="rounded-full bg-blue-900/60 px-3 py-1 text-xs font-bold uppercase tracking-[0.1em] text-blue-400">
-                              Duplicado
-                            </span>
-                          )}
-                          {converted && (
-                            <span className="rounded-full bg-amber-900/60 px-3 py-1 text-xs font-bold uppercase tracking-[0.1em] text-amber-400">
-                              +{monster.bonus_gold} oro
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="space-y-1.5">
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="font-semibold text-zinc-400">Copias</span>
-                            <span className="text-zinc-500">
-                              {monster.quantity_before} → {monster.quantity_after}
-                            </span>
-                          </div>
-                          <div className="h-2 overflow-hidden rounded-full bg-black/40">
-                            <div
-                              className="h-full animate-bar-fill rounded-full bg-orange-500"
-                              style={{
-                                width: `${Math.min((monster.quantity_after / 10) * 100, 100)}%`,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              {cardState === "revealed" && monster && (
+                <div className="animate-card-reveal" key={currentCardIndex}>
+                  <MonsterCard
+                    monster={{
+                      id: monster.id,
+                      name: monster.name,
+                      rarity: monster.rarity,
+                      monster_type: monster.monster_type,
+                      base_power: monster.base_power,
+                      image_path: monster.image_path,
+                      level: monster.level_after,
+                      quantity: monster.quantity_after,
+                      quantityBefore: monster.quantity_before,
+                      quantityAfter: monster.quantity_after,
+                      isNew: monster.quantity_before === 0,
+                      isDuplicate: monster.quantity_before > 0 && !monster.converted_to_gold,
+                      convertedToGold: monster.converted_to_gold,
+                      bonusGold: monster.bonus_gold,
+                    }}
+                  />
                 </div>
               )}
             </div>
