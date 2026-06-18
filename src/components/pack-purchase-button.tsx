@@ -4,17 +4,10 @@ import { supabase } from "@/app/lib/supabase/client";
 import type { OpenPackResult } from "@/app/lib/database.types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { PackOpeningAnimation } from "./pack-opening-animation";
 
 type PackPurchaseButtonProps = {
   packTypeCode: string;
-};
-
-const rarityStyles = {
-  common: "bg-zinc-800 text-zinc-300",
-  rare: "bg-sky-900 text-sky-300",
-  epic: "bg-violet-900 text-violet-300",
-  legendary: "bg-amber-900 text-amber-300",
-  mythic: "bg-rose-900 text-rose-300",
 };
 
 export function PackPurchaseButton({ packTypeCode }: PackPurchaseButtonProps) {
@@ -40,6 +33,10 @@ export function PackPurchaseButton({ packTypeCode }: PackPurchaseButtonProps) {
     }
 
     setResult(data as OpenPackResult);
+  };
+
+  const handleCloseAnimation = () => {
+    setResult(null);
     router.refresh();
   };
 
@@ -61,44 +58,7 @@ export function PackPurchaseButton({ packTypeCode }: PackPurchaseButtonProps) {
       ) : null}
 
       {result ? (
-        <div className="rounded-lg border border-orange-900 bg-gray-900 p-3">
-          <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:justify-between">
-            <p className="font-black text-orange-300">
-              {result.pack_type.name} abierto
-            </p>
-            <p className="font-semibold text-orange-400">
-              Oro: {result.gold_before} - {result.gold_after}
-            </p>
-          </div>
-
-          <div className="mt-3 grid gap-2">
-            {result.monsters.map((monster, index) => (
-              <div
-                className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2"
-                key={`${monster.id}-${index}`}
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                    <p className="font-bold text-zinc-50">{monster.name}</p>
-                    <p className="text-xs capitalize text-zinc-400">
-                      {monster.monster_type} - Nivel {monster.level_after}
-                    </p>
-                  </div>
-                  <span
-                    className={`rounded-full px-2 py-1 text-xs font-bold uppercase tracking-[0.14em] ${
-                      rarityStyles[monster.rarity]
-                    }`}
-                  >
-                    {monster.rarity}
-                  </span>
-                </div>
-                <p className="mt-1 text-xs text-zinc-400">
-                  Copias: {monster.quantity_before} - {monster.quantity_after}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <PackOpeningAnimation result={result} onClose={handleCloseAnimation} />
       ) : null}
     </div>
   );
