@@ -247,6 +247,8 @@ export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type PackType = Database["public"]["Tables"]["pack_types"]["Row"];
 export type Monster = Database["public"]["Tables"]["monsters"]["Row"];
 export type UserMonster = Database["public"]["Tables"]["user_monsters"]["Row"];
+export type Pack = Database["public"]["Tables"]["packs"]["Row"];
+export type PackMonster = Database["public"]["Tables"]["pack_monsters"]["Row"];
 
 export type OpenPackMonster = {
   id: string;

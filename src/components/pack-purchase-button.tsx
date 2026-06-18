@@ -71,12 +71,6 @@ export function PackPurchaseButton({ packTypeCode }: PackPurchaseButtonProps) {
             </p>
           </div>
 
-          {result.bonus_gold > 0 ? (
-            <p className="mt-2 text-sm font-semibold text-emerald-800">
-              Bonus por duplicados: {result.bonus_gold} oro
-            </p>
-          ) : null}
-
           <div className="mt-3 grid gap-2">
             {result.monsters.map((monster, index) => (
               <div
@@ -100,9 +94,6 @@ export function PackPurchaseButton({ packTypeCode }: PackPurchaseButtonProps) {
                 </div>
                 <p className="mt-1 text-xs text-zinc-600">
                   Copias: {monster.quantity_before} - {monster.quantity_after}
-                  {monster.converted_to_gold
-                    ? ` - Convertida en ${monster.bonus_gold} oro`
-                    : ""}
                 </p>
               </div>
             ))}
