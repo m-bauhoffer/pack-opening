@@ -4,16 +4,6 @@ Aplicacion full-stack construida con Next.js, TypeScript y Supabase.
 
 El proyecto permite a un usuario iniciar sesion con Google, comprar sobres de monstruos usando oro virtual, ver su coleccion con niveles/progreso y consultar el historial de aperturas.
 
-## Screenshots
-
-Agregar capturas aqui:
-
-```text
-docs/screenshots/home.png
-docs/screenshots/dashboard.png
-docs/screenshots/collection.png
-docs/screenshots/record.png
-```
 
 ## Tecnologias
 
