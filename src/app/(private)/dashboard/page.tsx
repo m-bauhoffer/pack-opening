@@ -24,10 +24,9 @@ export default async function DashboardPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-black">Dashboard</h1>
-        {/* <p className="mt-2 max-w-2xl text-zinc-400">
-          Centro principal para comprar sobres, ver el oro disponible y acceder
-          a las pantallas privadas.
-        </p> */}
+        <p className="mt-2 max-w-2xl text-zinc-400">
+          Centro principal para comprar sobres, ver el oro disponible.
+        </p>
       </div>
 
       {error ? (
@@ -38,15 +37,15 @@ export default async function DashboardPage() {
 
       <section className="grid gap-4 md:grid-cols-3">
         <article className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm">
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-zinc-400">
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-yellow-400">
             Oro disponible
           </p>
           <p className="mt-3 text-4xl font-black">
             {profile ? goldFormatter.format(profile.gold) : "--"}
           </p>
-          <p className="mt-2 text-sm text-zinc-400">
+          {/* <p className="mt-2 text-sm text-zinc-400">
             Saldo actual.
-          </p>
+          </p> */}
         </article>
 
         <article className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm md:col-span-2">
@@ -85,19 +84,6 @@ export default async function DashboardPage() {
           );
         })}
       </section>
-
-      {/* <section className="grid gap-4 md:grid-cols-2">
-        {dashboardActions.map((action) => (
-          <a
-            className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm transition hover:border-orange-600 hover:bg-zinc-800"
-            href={action.href}
-            key={action.href}
-          >
-            <h2 className="text-xl font-black">{action.title}</h2>
-            <p className="mt-2 text-sm text-zinc-400">{action.description}</p>
-          </a>
-        ))}
-      </section> */}
     </div>
   );
 }

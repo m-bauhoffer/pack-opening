@@ -8,9 +8,9 @@ import { MonsterCard } from "./monster-card";
 type SortKey = "rarity" | "level" | "power";
 type SortDirection = "asc" | "desc";
 
-type CollectionFiltersProps = {
+type CollectionPageClientProps = {
   collection: CollectionMonster[];
-  showOnlyToggle?: boolean;
+  error: string | null;
 };
 
 const rarityOrder: Monster["rarity"][] = [
@@ -20,14 +20,6 @@ const rarityOrder: Monster["rarity"][] = [
   "legendary",
   "mythic",
 ];
-
-const rarityStyles = {
-  common: "bg-zinc-800 text-zinc-300 border-zinc-700",
-  rare: "bg-sky-900 text-sky-300 border-sky-800",
-  epic: "bg-violet-900 text-violet-300 border-violet-800",
-  legendary: "bg-amber-900 text-amber-300 border-amber-800",
-  mythic: "bg-rose-900 text-rose-300 border-rose-800",
-};
 
 const rarityActiveStyles: Record<Monster["rarity"], string> = {
   common: "border-zinc-600 bg-zinc-900 text-zinc-300",
@@ -46,33 +38,7 @@ const sortOptions: Array<{ key: SortKey; direction: SortDirection; label: string
   { key: "power", direction: "desc", label: "Poder desc" },
 ];
 
-export function FiltersToggleButton({ showFilters, setShowFilters, hasActiveFilters }: { showFilters: boolean; setShowFilters: (value: boolean | ((prev: boolean) => boolean)) => void; hasActiveFilters: boolean }) {
-  return (
-    <button
-      className="flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:bg-zinc-700"
-      onClick={() => setShowFilters((prev) => !prev)}
-      type="button"
-    >
-      <svg
-        className={`h-4 w-4 transition-transform ${showFilters ? "rotate-180" : ""}`}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        viewBox="0 0 24 24"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-      </svg>
-      Filtros
-      {hasActiveFilters && (
-        <span className="ml-1 rounded-full bg-orange-600 px-2 py-0.5 text-xs text-zinc-950">
-          Activos
-        </span>
-      )}
-    </button>
-  );
-}
-
-export function CollectionFilters({ collection }: CollectionFiltersProps) {
+export function CollectionPageClient({ collection, error = null }: CollectionPageClientProps) {
   const [search, setSearch] = useState("");
   const [selectedRarities, setSelectedRarities] = useState<Monster["rarity"][]>([]);
   const [selectedLevels, setSelectedLevels] = useState<number[]>([]);
@@ -150,21 +116,54 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <FiltersToggleButton showFilters={showFilters} setShowFilters={setShowFilters} hasActiveFilters={hasActiveFilters} />
-
-        {hasActiveFilters && (
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-black">Colección</h1>
+          <p className="mt-2 max-w-2xl text-zinc-400">
+            Monstruos obtenidos, nivel actual y progreso hacia el siguiente nivel.
+          </p>
+        </div>
+        {collection.length > 0 && (
           <button
-            className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:bg-zinc-700"
-            onClick={resetFilters}
+            className="flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:bg-zinc-700"
+            onClick={() => setShowFilters((prev) => !prev)}
             type="button"
           >
-            Limpiar filtros
+            <svg
+              className={`h-4 w-4 transition-transform ${showFilters ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+            Filtros
+            {hasActiveFilters && (
+              <span className="ml-1 rounded-full bg-orange-600 px-2 py-0.5 text-xs text-zinc-950">
+                Activos
+              </span>
+            )}
           </button>
         )}
       </div>
 
-      {showFilters && (
+      {error ? (
+        <div className="rounded-lg border border-red-900 bg-red-950 px-4 py-3 text-sm text-red-400">
+          No se pudo cargar la coleccion: {error}
+        </div>
+      ) : null}
+
+      {!error && collection.length === 0 ? (
+        <div className="rounded-lg border border-dashed border-zinc-700 bg-zinc-900 px-6 py-12 text-center">
+          <h2 className="text-xl font-bold">Todavia no tenes monstruos</h2>
+          <p className="mt-2 text-sm text-zinc-400">
+            Cuando abras sobres, tus monstruos apareceran en esta pantalla.
+          </p>
+        </div>
+      ) : null}
+
+      {showFilters && collection.length > 0 && (
         <section className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm">
           <div className="grid gap-5">
             <label className="grid gap-2">
@@ -238,6 +237,18 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
             </label>
           </div>
         </section>
+      )}
+
+      {hasActiveFilters && collection.length > 0 && (
+        <div className="flex justify-end">
+          <button
+            className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:bg-zinc-700"
+            onClick={resetFilters}
+            type="button"
+          >
+            Limpiar filtros
+          </button>
+        </div>
       )}
 
       <div className="flex items-center justify-between gap-4">
