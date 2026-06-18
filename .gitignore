@@ -42,6 +42,7 @@ next-env.d.ts
 
 *.txt
 *.sql
+/docs
 
 # local debug
 /src/app/(private)/debug-security/
