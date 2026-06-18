@@ -52,6 +52,7 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
   const [selectedTypes, setSelectedTypes] = useState<Monster["monster_type"][]>([]);
   const [sortKey, setSortKey] = useState<SortKey>("rarity");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [showFilters, setShowFilters] = useState(false);
 
   const availableTypes = useMemo(
     () =>
@@ -114,56 +115,96 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
     setSortDirection("asc");
   };
 
+  const hasActiveFilters =
+    selectedRarities.length > 0 ||
+    selectedLevels.length > 0 ||
+    selectedTypes.length > 0 ||
+    search.trim().length > 0;
+
   return (
     <div className="space-y-6">
-      <section className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm">
-        <div className="grid gap-5">
-          <label className="grid gap-2">
-            <span className="text-sm font-bold text-zinc-300">Buscar por nombre</span>
-            <input
-              className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-zinc-50 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Ej: dragon, wolf, lich"
-              type="search"
-              value={search}
-            />
-          </label>
+      <div className="flex items-center justify-between">
+        <button
+          className="flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:bg-zinc-700"
+          onClick={() => setShowFilters((prev) => !prev)}
+          type="button"
+        >
+          <svg
+            className={`h-4 w-4 transition-transform ${showFilters ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+          Filtros
+          {hasActiveFilters && (
+            <span className="ml-1 rounded-full bg-orange-600 px-2 py-0.5 text-xs text-zinc-950">
+              Activos
+            </span>
+          )}
+        </button>
 
-          <FilterGroup title="Rareza">
-            {rarityOrder.map((rarity) => (
-              <ToggleButton
-                activeStyle={rarityActiveStyles[rarity]}
-                isActive={selectedRarities.includes(rarity)}
-                key={rarity}
-                label={rarity}
-                onClick={() => toggleValue(rarity, selectedRarities, setSelectedRarities)}
+        {hasActiveFilters && (
+          <button
+            className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:bg-zinc-700"
+            onClick={resetFilters}
+            type="button"
+          >
+            Limpiar filtros
+          </button>
+        )}
+      </div>
+
+      {showFilters && (
+        <section className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm">
+          <div className="grid gap-5">
+            <label className="grid gap-2">
+              <span className="text-sm font-bold text-zinc-300">Buscar por nombre</span>
+              <input
+                className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-zinc-50 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Ej: dragon, wolf, lich"
+                type="search"
+                value={search}
               />
-            ))}
-          </FilterGroup>
+            </label>
 
-          <FilterGroup title="Nivel">
-            {[1, 2, 3, 4, 5].map((level) => (
-              <ToggleButton
-                isActive={selectedLevels.includes(level)}
-                key={level}
-                label={`Nivel ${level}`}
-                onClick={() => toggleValue(level, selectedLevels, setSelectedLevels)}
-              />
-            ))}
-          </FilterGroup>
+            <FilterGroup title="Rareza">
+              {rarityOrder.map((rarity) => (
+                <ToggleButton
+                  activeStyle={rarityActiveStyles[rarity]}
+                  isActive={selectedRarities.includes(rarity)}
+                  key={rarity}
+                  label={rarity}
+                  onClick={() => toggleValue(rarity, selectedRarities, setSelectedRarities)}
+                />
+              ))}
+            </FilterGroup>
 
-          <FilterGroup title="Monster type">
-            {availableTypes.map((monsterType) => (
-              <ToggleButton
-                isActive={selectedTypes.includes(monsterType)}
-                key={monsterType}
-                label={monsterType}
-                onClick={() => toggleValue(monsterType, selectedTypes, setSelectedTypes)}
-              />
-            ))}
-          </FilterGroup>
+            <FilterGroup title="Nivel">
+              {[1, 2, 3, 4, 5].map((level) => (
+                <ToggleButton
+                  isActive={selectedLevels.includes(level)}
+                  key={level}
+                  label={`Nivel ${level}`}
+                  onClick={() => toggleValue(level, selectedLevels, setSelectedLevels)}
+                />
+              ))}
+            </FilterGroup>
 
-          <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
+            <FilterGroup title="Monster type">
+              {availableTypes.map((monsterType) => (
+                <ToggleButton
+                  isActive={selectedTypes.includes(monsterType)}
+                  key={monsterType}
+                  label={monsterType}
+                  onClick={() => toggleValue(monsterType, selectedTypes, setSelectedTypes)}
+                />
+              ))}
+            </FilterGroup>
+
             <label className="grid gap-2">
               <span className="text-sm font-bold text-zinc-300">Ordenar por</span>
               <select
@@ -188,17 +229,9 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
                 ))}
               </select>
             </label>
-
-            <button
-              className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm font-bold text-zinc-300 transition hover:bg-zinc-700"
-              onClick={resetFilters}
-              type="button"
-            >
-              Limpiar filtros
-            </button>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm font-semibold text-zinc-400">
