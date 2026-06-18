@@ -1,15 +1,56 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { localFont } from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Títulos: Cinzel Decorative Bold
+const cinzelDecorative = localFont({
+  src: [
+    {
+      path: "../fonts/CinzelDecorative-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/CinzelDecorative-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-cinzel-decorative",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Subtítulos: Cinzel Bold
+const cinzel = localFont({
+  src: [
+    {
+      path: "../fonts/Cinzel-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/Cinzel-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-cinzel",
+});
+
+// Texto normal: Cormorant Garamond
+const cormorantGaramond = localFont({
+  src: [
+    {
+      path: "../fonts/CormorantGaramond-VariableFont_wght.ttf",
+      weight: "100 900",
+      style: "normal",
+    },
+    {
+      path: "../fonts/CormorantGaramond-Italic-VariableFont_wght.ttf",
+      weight: "100 900",
+      style: "italic",
+    },
+  ],
+  variable: "--font-cormorant",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +66,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${cinzelDecorative.variable} ${cinzel.variable} ${cormorantGaramond.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

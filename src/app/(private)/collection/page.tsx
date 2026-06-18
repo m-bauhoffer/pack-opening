@@ -8,21 +8,21 @@ export default async function CollectionPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-black">Coleccion</h1>
-        <p className="mt-2 max-w-2xl text-zinc-600">
+        <p className="mt-2 max-w-2xl text-zinc-400">
           Monstruos obtenidos, nivel actual y progreso hacia el siguiente nivel.
         </p>
       </div>
 
       {error ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-lg border border-red-900 bg-red-950 px-4 py-3 text-sm text-red-400">
           No se pudo cargar la coleccion: {error}
         </div>
       ) : null}
 
       {!error && collection.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-zinc-300 bg-white px-6 py-12 text-center">
+        <div className="rounded-lg border border-dashed border-zinc-700 bg-zinc-900 px-6 py-12 text-center">
           <h2 className="text-xl font-bold">Todavia no tenes monstruos</h2>
-          <p className="mt-2 text-sm text-zinc-600">
+          <p className="mt-2 text-sm text-zinc-400">
             Cuando abras sobres, tus monstruos apareceran en esta pantalla.
           </p>
         </div>

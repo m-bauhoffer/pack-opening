@@ -10,11 +10,11 @@ type PackPurchaseButtonProps = {
 };
 
 const rarityStyles = {
-  common: "bg-zinc-100 text-zinc-700",
-  rare: "bg-sky-100 text-sky-700",
-  epic: "bg-violet-100 text-violet-700",
-  legendary: "bg-amber-100 text-amber-800",
-  mythic: "bg-rose-100 text-rose-700",
+  common: "bg-zinc-800 text-zinc-300",
+  rare: "bg-sky-900 text-sky-300",
+  epic: "bg-violet-900 text-violet-300",
+  legendary: "bg-amber-900 text-amber-300",
+  mythic: "bg-rose-900 text-rose-300",
 };
 
 export function PackPurchaseButton({ packTypeCode }: PackPurchaseButtonProps) {
@@ -46,7 +46,7 @@ export function PackPurchaseButton({ packTypeCode }: PackPurchaseButtonProps) {
   return (
     <div className="mt-5 space-y-4">
       <button
-        className="w-full rounded-lg bg-emerald-400 px-4 py-3 text-sm font-bold text-zinc-950 shadow-sm transition hover:bg-emerald-300 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-500"
+        className="w-full rounded-lg bg-orange-500 px-4 py-3 text-sm font-bold text-zinc-950 shadow-sm transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-500"
         disabled={isOpening}
         onClick={openPack}
         type="button"
@@ -55,18 +55,18 @@ export function PackPurchaseButton({ packTypeCode }: PackPurchaseButtonProps) {
       </button>
 
       {error ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <div className="rounded-lg border border-red-900 bg-red-950 px-3 py-2 text-sm text-red-400">
           {error}
         </div>
       ) : null}
 
       {result ? (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+        <div className="rounded-lg border border-orange-900 bg-gray-900 p-3">
           <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:justify-between">
-            <p className="font-black text-emerald-950">
+            <p className="font-black text-orange-300">
               {result.pack_type.name} abierto
             </p>
-            <p className="font-semibold text-emerald-800">
+            <p className="font-semibold text-orange-400">
               Oro: {result.gold_before} - {result.gold_after}
             </p>
           </div>
@@ -74,13 +74,13 @@ export function PackPurchaseButton({ packTypeCode }: PackPurchaseButtonProps) {
           <div className="mt-3 grid gap-2">
             {result.monsters.map((monster, index) => (
               <div
-                className="rounded-lg border border-white/80 bg-white px-3 py-2"
+                className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2"
                 key={`${monster.id}-${index}`}
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
-                    <p className="font-bold text-zinc-950">{monster.name}</p>
-                    <p className="text-xs capitalize text-zinc-600">
+                    <p className="font-bold text-zinc-50">{monster.name}</p>
+                    <p className="text-xs capitalize text-zinc-400">
                       {monster.monster_type} - Nivel {monster.level_after}
                     </p>
                   </div>
@@ -92,7 +92,7 @@ export function PackPurchaseButton({ packTypeCode }: PackPurchaseButtonProps) {
                     {monster.rarity}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-zinc-600">
+                <p className="mt-1 text-xs text-zinc-400">
                   Copias: {monster.quantity_before} - {monster.quantity_after}
                 </p>
               </div>

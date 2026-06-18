@@ -20,11 +20,11 @@ const rarityOrder: Monster["rarity"][] = [
 ];
 
 const rarityStyles = {
-  common: "bg-zinc-100 text-zinc-700 border-zinc-200",
-  rare: "bg-sky-100 text-sky-700 border-sky-200",
-  epic: "bg-violet-100 text-violet-700 border-violet-200",
-  legendary: "bg-amber-100 text-amber-800 border-amber-200",
-  mythic: "bg-rose-100 text-rose-700 border-rose-200",
+  common: "bg-zinc-800 text-zinc-300 border-zinc-700",
+  rare: "bg-sky-900 text-sky-300 border-sky-800",
+  epic: "bg-violet-900 text-violet-300 border-violet-800",
+  legendary: "bg-amber-900 text-amber-300 border-amber-800",
+  mythic: "bg-rose-900 text-rose-300 border-rose-800",
 };
 
 const sortOptions: Array<{ key: SortKey; direction: SortDirection; label: string }> = [
@@ -107,12 +107,12 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+      <section className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm">
         <div className="grid gap-5">
           <label className="grid gap-2">
-            <span className="text-sm font-bold text-zinc-700">Buscar por nombre</span>
+            <span className="text-sm font-bold text-zinc-300">Buscar por nombre</span>
             <input
-              className="rounded-lg border border-zinc-300 px-4 py-3 text-sm outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+              className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-zinc-50 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Ej: dragon, wolf, lich"
               type="search"
@@ -155,9 +155,9 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
 
           <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
             <label className="grid gap-2">
-              <span className="text-sm font-bold text-zinc-700">Ordenar por</span>
+              <span className="text-sm font-bold text-zinc-300">Ordenar por</span>
               <select
-                className="rounded-lg border border-zinc-300 px-4 py-3 text-sm font-semibold outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+                className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm font-semibold text-zinc-50 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                 onChange={(event) => {
                   const [nextSortKey, nextSortDirection] = event.target.value.split(
                     ":"
@@ -180,7 +180,7 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
             </label>
 
             <button
-              className="rounded-lg border border-zinc-300 px-4 py-3 text-sm font-bold text-zinc-800 transition hover:bg-zinc-100"
+              className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm font-bold text-zinc-300 transition hover:bg-zinc-700"
               onClick={resetFilters}
               type="button"
             >
@@ -191,15 +191,15 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
       </section>
 
       <div className="flex items-center justify-between gap-4">
-        <p className="text-sm font-semibold text-zinc-600">
+        <p className="text-sm font-semibold text-zinc-400">
           Mostrando {visibleCollection.length} de {collection.length}
         </p>
       </div>
 
       {visibleCollection.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-zinc-300 bg-white px-6 py-12 text-center">
+        <div className="rounded-lg border border-dashed border-zinc-700 bg-zinc-900 px-6 py-12 text-center">
           <h2 className="text-xl font-bold">No hay resultados</h2>
-          <p className="mt-2 text-sm text-zinc-600">
+          <p className="mt-2 text-sm text-zinc-400">
             Ajusta la busqueda o limpia los filtros para ver mas monstruos.
           </p>
         </div>
@@ -207,7 +207,7 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {visibleCollection.map((item) => (
             <article
-              className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm"
               key={item.id}
             >
               <div className="flex items-start justify-between gap-4">
@@ -220,12 +220,12 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
                     {item.monster.rarity}
                   </p>
                   <h2 className="mt-3 text-xl font-black">{item.monster.name}</h2>
-                  <p className="mt-1 text-sm capitalize text-zinc-600">
+                  <p className="mt-1 text-sm capitalize text-zinc-400">
                     {item.monster.monster_type} - Poder {item.monster.base_power}
                   </p>
                 </div>
                 <div className="rounded-lg bg-zinc-950 px-3 py-2 text-center text-zinc-50">
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-orange-400">
                     Nivel
                   </p>
                   <p className="text-2xl font-black">{item.level}</p>
@@ -234,16 +234,16 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
 
               <div className="mt-5 space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="font-bold text-zinc-700">Copias</span>
-                  <span className="text-zinc-600">{item.quantity}</span>
+                  <span className="font-bold text-zinc-300">Copias</span>
+                  <span className="text-zinc-400">{item.quantity}</span>
                 </div>
-                <div className="h-3 overflow-hidden rounded-full bg-zinc-100">
+                <div className="h-3 overflow-hidden rounded-full bg-zinc-800">
                   <div
-                    className="h-full rounded-full bg-emerald-400"
+                    className="h-full rounded-full bg-orange-500"
                     style={{ width: `${item.progressPercent}%` }}
                   />
                 </div>
-                <p className="text-sm font-semibold text-zinc-600">
+                <p className="text-sm font-semibold text-zinc-400">
                   {item.progressLabel}
                 </p>
               </div>
@@ -264,7 +264,7 @@ function FilterGroup({
 }>) {
   return (
     <div className="grid gap-2">
-      <p className="text-sm font-bold text-zinc-700">{title}</p>
+      <p className="text-sm font-bold text-zinc-300">{title}</p>
       <div className="flex flex-wrap gap-2">{children}</div>
     </div>
   );
@@ -283,8 +283,8 @@ function ToggleButton({
     <button
       className={`rounded-lg border px-3 py-2 text-sm font-bold capitalize transition ${
         isActive
-          ? "border-emerald-500 bg-emerald-100 text-emerald-900"
-          : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100"
+          ? "border-orange-600 bg-orange-950 text-orange-300"
+          : "border-zinc-700 bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
       }`}
       onClick={onClick}
       type="button"

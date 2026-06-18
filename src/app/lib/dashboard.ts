@@ -1,6 +1,11 @@
 import { requireCurrentUser } from "@/app/lib/auth";
 import { createSupabaseServerClient } from "@/app/lib/supabase/server";
 
+export function isPackTypePremium(packTypeCode: string): boolean {
+  const premiumCodes = ["premium", "legendary", "mythic", "vip"];
+  return premiumCodes.some((code) => packTypeCode.toLowerCase().includes(code));
+}
+
 export async function getDashboardData() {
   const user = await requireCurrentUser();
   const supabase = await createSupabaseServerClient();
