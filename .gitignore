@@ -41,3 +41,8 @@ yarn-error.log*
 next-env.d.ts
 
 *.txt
+*.sql
+
+# local debug
+/src/app/(private)/debug-security/
+/src/components/debug-gold-update-button.tsx

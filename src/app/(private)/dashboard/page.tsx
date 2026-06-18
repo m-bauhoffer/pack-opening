@@ -1,4 +1,5 @@
 import { getDashboardData } from "@/app/lib/dashboard";
+import { PackPurchaseButton } from "@/components/pack-purchase-button";
 
 const dashboardActions = [
   {
@@ -76,13 +77,7 @@ export default async function DashboardPage() {
                 {goldFormatter.format(packType.price)} oro
               </p>
             </div>
-            <button
-              className="mt-5 w-full rounded-lg bg-zinc-200 px-4 py-3 text-sm font-bold text-zinc-500"
-              disabled
-              type="button"
-            >
-              Compra pendiente
-            </button>
+            <PackPurchaseButton packTypeCode={packType.code} />
           </article>
         ))}
       </section>

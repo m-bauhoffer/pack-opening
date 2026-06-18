@@ -142,7 +142,22 @@ export type Database = {
           gold_spent?: number;
           created_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "packs_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "packs_pack_type_id_fkey";
+            columns: ["pack_type_id"];
+            isOneToOne: false;
+            referencedRelation: "pack_types";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       pack_monsters: {
         Row: {
@@ -160,7 +175,22 @@ export type Database = {
           pack_id?: string;
           monster_id?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "pack_monsters_pack_id_fkey";
+            columns: ["pack_id"];
+            isOneToOne: false;
+            referencedRelation: "packs";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pack_monsters_monster_id_fkey";
+            columns: ["monster_id"];
+            isOneToOne: false;
+            referencedRelation: "monsters";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       user_monsters: {
         Row: {
@@ -181,11 +211,33 @@ export type Database = {
           monster_id?: string;
           quantity?: number;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "user_monsters_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_monsters_monster_id_fkey";
+            columns: ["monster_id"];
+            isOneToOne: false;
+            referencedRelation: "monsters";
+            referencedColumns: ["id"];
+          }
+        ];
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      open_pack: {
+        Args: {
+          pack_type_code: string;
+        };
+        Returns: Json;
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
@@ -193,3 +245,35 @@ export type Database = {
 
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type PackType = Database["public"]["Tables"]["pack_types"]["Row"];
+export type Monster = Database["public"]["Tables"]["monsters"]["Row"];
+export type UserMonster = Database["public"]["Tables"]["user_monsters"]["Row"];
+
+export type OpenPackMonster = {
+  id: string;
+  name: string;
+  rarity: Monster["rarity"];
+  monster_type: Monster["monster_type"];
+  base_power: number;
+  image_path: string;
+  quantity_before: number;
+  quantity_after: number;
+  level_after: number;
+  is_duplicate: boolean;
+  converted_to_gold: boolean;
+  bonus_gold: number;
+};
+
+export type OpenPackResult = {
+  pack_id: string;
+  pack_type: {
+    id: string;
+    code: string;
+    name: string;
+    price: number;
+  };
+  gold_spent: number;
+  gold_before: number;
+  gold_after: number;
+  bonus_gold: number;
+  monsters: OpenPackMonster[];
+};
