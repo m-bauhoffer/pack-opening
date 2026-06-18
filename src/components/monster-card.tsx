@@ -2,6 +2,7 @@
 
 import type { Monster } from "@/app/lib/database.types";
 import { getMonsterImageUrl } from "@/app/lib/supabase/storage";
+import { getMonsterProgress } from "@/app/lib/progress";
 
 export interface CardMonsterData {
   id: string;
@@ -28,7 +29,13 @@ type MonsterCardProps = {
 
 const rarityStyles: Record<
   string,
-  { border: string; badgeBg: string; badgeText: string; badgeBorder: string; gradient: string }
+  {
+    border: string;
+    badgeBg: string;
+    badgeText: string;
+    badgeBorder: string;
+    gradient: string;
+  }
 > = {
   common: {
     border: "border-zinc-600",
@@ -71,12 +78,14 @@ export function MonsterCard({ monster }: MonsterCardProps) {
   const styles = rarityStyles[monster.rarity] ?? rarityStyles.common;
   const imageUrl = getMonsterImageUrl(monster.image_path);
   const showCopies = monster.showCopiesBar ?? true;
-  const copiesLabel = monster.quantityAfter != null
-    ? `${monster.quantityBefore} → ${monster.quantityAfter}`
-    : `${monster.quantity}`;
-  const copiesProgress = monster.quantityAfter != null
-    ? Math.min((monster.quantityAfter / 10) * 100, 100)
-    : Math.min((monster.quantity / 10) * 100, 100);
+
+  // Use the real level threshold logic from collection.ts
+  const quantity = monster.quantityAfter ?? monster.quantity;
+  const progress = getMonsterProgress(quantity);
+  const copiesLabel = progress.nextLevel
+    ? `${quantity} / ${progress.nextLevelRequiredCopies}`
+    : "Nivel maximo";
+  const copiesProgress = progress.progressPercent;
 
   return (
     <div>
@@ -87,20 +96,22 @@ export function MonsterCard({ monster }: MonsterCardProps) {
           borderColor: styles.border.replace("border-", ""),
         }}
       >
-        {/* Imagen de fondo */}
-        {imageUrl && (
-          <img
-            alt={monster.name}
-            className="absolute inset-0 h-full w-full object-contain opacity-90"
-            src={imageUrl}
-          />
-        )}
-
         {/* Overlay oscuro para legibilidad */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/80" />
 
         {/* Tinte de rareza */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${styles.gradient} opacity-20`} />
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${styles.gradient} opacity-20`}
+        />
+
+        {/* Imagen de fondo */}
+        {imageUrl && (
+          <img
+            alt={monster.name}
+            className="absolute inset-0 h-full w-full object-contain opacity-100"
+            src={imageUrl}
+          />
+        )}
 
         {/* Contenido de la carta */}
         <div className="relative flex h-full flex-col p-5">
@@ -144,7 +155,7 @@ export function MonsterCard({ monster }: MonsterCardProps) {
                 <span className="font-semibold text-zinc-300">Copias</span>
                 <span className="text-zinc-400">{copiesLabel}</span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-black/60">
+              <div className="h-2 overflow-hidden rounded-full border border-zinc-600 bg-black/60">
                 <div
                   className="h-full animate-bar-fill rounded-full bg-orange-500"
                   style={{
@@ -174,11 +185,11 @@ export function MonsterCard({ monster }: MonsterCardProps) {
             +{monster.bonusGold} oro
           </span>
         )}
-        {monster.statusBadge && (
+        {/* {monster.statusBadge && (
           <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs font-bold uppercase tracking-[0.1em] text-zinc-400 backdrop-blur-md">
             {monster.statusBadge}
           </span>
-        )}
+        )} */}
       </div>
     </div>
   );
