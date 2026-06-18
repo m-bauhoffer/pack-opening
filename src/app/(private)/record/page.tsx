@@ -1,4 +1,4 @@
-import { getRecordData } from "@/app/lib/record";
+import { getRecordData, type RecordData } from "@/app/lib/record";
 import { isPackTypePremium } from "@/app/lib/dashboard";
 import { getPackStyles } from "@/app/lib/packStyles";
 
@@ -17,7 +17,7 @@ const rarityStyles = {
 };
 
 export default async function RecordPage() {
-  const { packs, totalGoldSpent, error } = await getRecordData();
+  const { packs, totalGoldSpent, commonPacks, premiumPacks, error } = await getRecordData();
 
   return (
     <div className="space-y-6">
@@ -34,12 +34,26 @@ export default async function RecordPage() {
         </div>
       ) : null}
 
-      <section className="grid gap-4 md:grid-cols-2">
+      <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <article className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-zinc-400">
             Sobres abiertos
           </p>
           <p className="mt-3 text-4xl font-black">{packs.length}</p>
+        </article>
+
+        <article className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm">
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-zinc-400">
+            Sobres comunes
+          </p>
+          <p className="mt-3 text-4xl font-black">{commonPacks}</p>
+        </article>
+
+        <article className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm">
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-zinc-400">
+            Sobres premium
+          </p>
+          <p className="mt-3 text-4xl font-black">{premiumPacks}</p>
         </article>
 
         <article className="rounded-lg border border-zinc-700 bg-zinc-900 p-5 shadow-sm">

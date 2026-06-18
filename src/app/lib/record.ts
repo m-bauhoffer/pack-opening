@@ -1,5 +1,6 @@
 import { requireCurrentUser } from "@/app/lib/auth";
 import { createSupabaseServerClient } from "@/app/lib/supabase/server";
+import { isPackTypePremium } from "@/app/lib/dashboard";
 import type {
   Monster,
   Pack,
@@ -22,6 +23,14 @@ export type RecordPack = {
   createdAt: string;
   packType: PackType | null;
   monsters: Monster[];
+};
+
+export type RecordData = {
+  packs: RecordPack[];
+  totalGoldSpent: number;
+  commonPacks: number;
+  premiumPacks: number;
+  error: string | null;
 };
 
 export async function getRecordData() {
@@ -65,10 +74,19 @@ export async function getRecordData() {
 
   const packs = (data ?? []).map(mapRecordPack);
 
+  const commonPacks = packs.filter(
+    (pack) => !isPackTypePremium(pack.packType?.code ?? "")
+  ).length;
+  const premiumPacks = packs.filter(
+    (pack) => isPackTypePremium(pack.packType?.code ?? "")
+  ).length;
+
   return {
     user,
     packs,
     totalGoldSpent: packs.reduce((total, pack) => total + pack.goldSpent, 0),
+    commonPacks,
+    premiumPacks,
     error: error?.message ?? null,
   };
 }

@@ -148,20 +148,19 @@ export function MonsterCard({ monster }: MonsterCardProps) {
             </p>
           </div>
 
-          {/* Barra de copias */}
+          {/* Barra de progreso */}
           {showCopies && (
-            <div className="mt-1 space-y-1">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-zinc-300">Copias</span>
-                <span className="text-zinc-400">{copiesLabel}</span>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full border border-zinc-600 bg-black/60">
+            <div className="mt-2">
+              <div className="relative h-7 overflow-hidden rounded-full border border-zinc-600 bg-black/60">
                 <div
                   className="h-full animate-bar-fill rounded-full bg-orange-500"
                   style={{
                     width: `${copiesProgress}%`,
                   }}
                 />
+                <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                  {copiesLabel}
+                </span>
               </div>
             </div>
           )}

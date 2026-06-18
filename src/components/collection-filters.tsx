@@ -28,6 +28,14 @@ const rarityStyles = {
   mythic: "bg-rose-900 text-rose-300 border-rose-800",
 };
 
+const rarityActiveStyles: Record<Monster["rarity"], string> = {
+  common: "border-zinc-600 bg-zinc-900 text-zinc-300",
+  rare: "border-sky-600 bg-sky-950 text-sky-300",
+  epic: "border-violet-600 bg-violet-950 text-violet-300",
+  legendary: "border-amber-500 bg-amber-950 text-amber-300",
+  mythic: "border-rose-500 bg-rose-950 text-rose-300",
+};
+
 const sortOptions: Array<{ key: SortKey; direction: SortDirection; label: string }> = [
   { key: "rarity", direction: "asc", label: "Rareza asc" },
   { key: "rarity", direction: "desc", label: "Rareza desc" },
@@ -124,6 +132,7 @@ export function CollectionFilters({ collection }: CollectionFiltersProps) {
           <FilterGroup title="Rareza">
             {rarityOrder.map((rarity) => (
               <ToggleButton
+                activeStyle={rarityActiveStyles[rarity]}
                 isActive={selectedRarities.includes(rarity)}
                 key={rarity}
                 label={rarity}
@@ -245,10 +254,12 @@ function FilterGroup({
 }
 
 function ToggleButton({
+  activeStyle,
   isActive,
   label,
   onClick,
 }: Readonly<{
+  activeStyle?: string;
   isActive: boolean;
   label: string;
   onClick: () => void;
@@ -257,7 +268,7 @@ function ToggleButton({
     <button
       className={`rounded-lg border px-3 py-2 text-sm font-bold capitalize transition ${
         isActive
-          ? "border-orange-600 bg-orange-950 text-orange-300"
+          ? activeStyle ?? "border-orange-600 bg-orange-950 text-orange-300"
           : "border-zinc-700 bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
       }`}
       onClick={onClick}
