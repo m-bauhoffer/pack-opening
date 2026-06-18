@@ -1,51 +1,57 @@
 # Monster Pack Opening
 
-Aplicacion full-stack construida con Next.js, TypeScript y Supabase.
+Aplicación full-stack construida con Next.js, TypeScript y Supabase.
 
-El proyecto permite a un usuario iniciar sesion con Google, comprar sobres de monstruos usando oro virtual, ver su coleccion con niveles/progreso y consultar el historial de aperturas.
+El proyecto permite a un usuario iniciar sesión con Google, comprar sobres de monstruos usando oro virtual, ver su colección con niveles/progreso y consultar el historial de aperturas.
 
 
-## Tecnologias
+## Tecnologías
 
-- Next.js App Router.
+- Next.js 16 App Router.
 - React.
 - TypeScript.
 - Tailwind CSS.
-- Supabase Auth.
-- Supabase Database.
-- Supabase Row Level Security.
+- Supabase Auth (Google OAuth).
+- Supabase Database (PostgreSQL).
+- Supabase Row Level Security (RLS).
+- Supabase Storage (imágenes de monstruos y fondos).
 - Supabase RPC/Postgres functions.
-- Google OAuth.
+
 
 ## Funcionalidades
 
 - Login con Google.
 - Logout.
-- Rutas privadas protegidas.
-- Dashboard con oro disponible.
-- Lista de sobres disponibles.
+- Rutas privadas protegidas server-side.
+- Dashboard con oro disponible y tienda de sobres.
 - Compra de sobres mediante RPC segura.
-- Coleccion de monstruos.
+- Apertura de sobres con obtención de monstruos.
+- Colección de monstruos con filtros y ordenamiento.
 - Filtros por nombre, rareza, nivel y tipo.
 - Ordenamiento por rareza, nivel y poder.
-- Historial de sobres abiertos.
+- Historial de sobres abiertos con estadísticas.
 - Oro total gastado.
-- Seguridad con RLS.
+- Imágenes de monstruos desde Supabase Storage.
+- Fondo animado en la página home.
+- Seguridad con RLS y hardening SQL.
+
 
 ## Rutas
 
-Publica:
-- `/`
+Pública:
+- `/` - Página de inicio con imagen de fondo y login.
 
 Privadas:
-- `/dashboard`
-- `/collection`
-- `/record`
+- `/dashboard` - Oro disponible, tienda de sobres.
+- `/collection` - Colección de monstruos con filtros.
+- `/record` - Historial de aperturas y estadísticas.
+- `/debug-security` - Depuración de seguridad (solo desarrollo).
 
-Tecnica:
-- `/auth/callback`
+Técnica:
+- `/auth/callback` - Callback de autenticación.
 
-## Instalacion local
+
+## Instalación local
 
 Instalar dependencias:
 
@@ -72,6 +78,7 @@ Abrir:
 http://localhost:3000
 ```
 
+
 ## Scripts
 
 ```bash
@@ -81,45 +88,53 @@ npm run start
 npm run lint
 ```
 
-## Configuracion de Supabase
+
+## Configuración de Supabase
 
 El proyecto requiere:
 
 - Proyecto Supabase activo.
 - Google OAuth configurado en Supabase Auth.
 - Tablas del juego creadas.
-- RLS habilitado.
-- Politicas de lectura por usuario.
+- RLS habilitado en todas las tablas.
+- Políticas de lectura por usuario.
 - RPC `open_pack` creada.
 - Hardening aplicado para bloquear escrituras directas sensibles.
+- Bucket `monster-images` para imágenes de monstruos y fondos.
 
 Tablas:
-- `profiles`
-- `monsters`
-- `pack_types`
-- `packs`
-- `pack_monsters`
-- `user_monsters`
+- `profiles` - Perfil de usuario con oro.
+- `monsters` - Catálogo de monstruos.
+- `pack_types` - Tipos de sobres (common, premium).
+- `packs` - Registro de sobres comprados.
+- `pack_monsters` - Relación sobres-monstruos.
+- `user_monsters` - Colección de monstruos del usuario.
 
 RPC:
-- `open_pack(pack_type_code text)`
+- `open_pack(pack_type_code text)` - Apertura segura de sobres.
+
+Storage:
+- Bucket: `monster-images`
+- Imágenes de monstruos y fondos (ej: `bg-dragon.webp`)
+
 
 ## Variables de entorno
 
 `NEXT_PUBLIC_SUPABASE_URL`
 
-URL publica del proyecto Supabase.
+URL pública del proyecto Supabase.
 
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 
-Clave publica/publishable usada por el cliente Supabase.
+Clave pública/publishable usada por el cliente Supabase.
+
 
 ## Arquitectura resumida
 
 ```text
 Next.js App Router
   |
-  | Server Components
+  | Server Components (datos)
   v
 Supabase SSR Client
   |
@@ -132,19 +147,27 @@ Supabase Auth + RLS
 Postgres
 ```
 
+Componentes clave:
+- `src/app/(private)/layout.tsx` - Layout privado con navegación.
+- `src/components/private-navigation.tsx` - Navegación con indicador de sección activa.
+- `src/components/collection-page-client.tsx` - Página de colección con filtros interactivos.
+- `src/app/lib/supabase/storage.ts` - URLs públicas de imágenes desde Storage.
+
+
 ## Seguridad
 
 La seguridad no depende de ocultar botones.
 
 Medidas principales:
-- Rutas privadas protegidas server-side.
-- Sesion con cookies.
+- Rutas privadas protegidas server-side con `requireCurrentUser`.
+- Sesión con cookies de Supabase.
 - Middleware de Supabase.
-- RLS en Supabase.
+- RLS en Supabase para aislamiento por usuario.
 - RPC `open_pack` para escritura sensible.
-- Cliente no envia `user_id`, rarezas ni monstruos obtenidos.
+- Cliente no envía `user_id`, rarezas ni monstruos obtenidos.
 - Updates directos de oro bloqueados.
-- Inserts/updates directos de coleccion e historial bloqueados.
+- Inserts/updates directos de colección e historial bloqueados.
+
 
 ## Despliegue en Vercel
 
@@ -156,18 +179,14 @@ Medidas principales:
 4. Configurar URLs de redirect en Supabase Auth.
 5. Ejecutar deploy.
 
+
 ## Estado actual
 
 MVP funcional:
-- Autenticacion.
-- Compra de sobres.
-- Coleccion.
-- Historial.
+- Autenticación con Google.
+- Compra y apertura de sobres.
+- Colección con filtros avanzados.
+- Historial con estadísticas.
+- Imágenes desde Supabase Storage.
+- Fondo animado en home.
 - Seguridad basica y hardening SQL.
-
-Pendiente o futuro:
-- Imagenes reales desde Supabase Storage.
-- Tipos generados con Supabase CLI.
-- SQL versionado como migrations.
-- Tests automatizados.
-- Mejoras visuales.
