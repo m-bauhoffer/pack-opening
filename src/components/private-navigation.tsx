@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 const privateNavigation = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/collection", label: "Coleccion" },
+  { href: "/collection", label: "Colección" },
   { href: "/record", label: "Historial" },
 ] as const;
 

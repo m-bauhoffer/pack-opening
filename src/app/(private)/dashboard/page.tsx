@@ -2,19 +2,6 @@ import { getDashboardData, isPackTypePremium } from "@/app/lib/dashboard";
 import { getPackStyles } from "@/app/lib/packStyles";
 import { PackPurchaseButton } from "@/components/pack-purchase-button";
 
-// const dashboardActions = [
-//   {
-//     href: "/collection",
-//     title: "Ver coleccion",
-//     description: "Revisar monstruos obtenidos, niveles y progreso.",
-//   },
-//   {
-//     href: "/record",
-//     title: "Ver historial",
-//     description: "Consultar sobres abiertos, recompensas y oro gastado.",
-//   },
-// ];
-
 const goldFormatter = new Intl.NumberFormat("es-AR");
 
 export default async function DashboardPage() {
